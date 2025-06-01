@@ -5,13 +5,12 @@ class TaskManager {
     (async () => {
       try {
         // Verificar si el archivo tasks.json existe
-        this.fileHandle = await fs.open("tasks.json", "r");
+        await fs.access("tasks.json");
       } catch (err) {
-        // Si no existe el archivo tasks.json, lo creamos y volvemos a definir nuestro fileHandle
+        // Si no existe el archivo tasks.json, lo creamos
         if (err.code === "ENOENT") {
           try {
             await fs.writeFile("tasks.json", "[]");
-            this.fileHandle = await fs.open("tasks.json", "r");
           } catch (err) {
             console.error(err);
           }
