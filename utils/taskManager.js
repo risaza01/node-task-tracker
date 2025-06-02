@@ -1,24 +1,26 @@
 const fs = require("fs/promises");
 
 class TaskManager {
-  constructor() {
-    (async () => {
-      try {
-        // Verificar si el archivo tasks.json existe
-        await fs.access("tasks.json");
-      } catch (err) {
-        // Si no existe el archivo tasks.json, lo creamos
-        if (err.code === "ENOENT") {
-          try {
-            await fs.writeFile("tasks.json", "[]");
-          } catch (err) {
-            console.error(err);
-          }
-        } else {
-          console.error(err);
+  constructor() {}
+
+  async init() {
+    try {
+      // Verificar si el archivo tasks.json existe
+      await fs.access("tasks.json");
+    } catch (err) {
+      // Si no existe el archivo tasks.json, lo creamos
+      if (err.code === "ENOENT") {
+        try {
+          await fs.writeFile("tasks.json", "[]");
+        } catch (writeErr) {
+          throw new Error("Error al crear el archivo tasks.json", {
+            cause: writeErr,
+          });
         }
+      } else {
+        throw new Error("Error al inicializar el archivo", { cause: err });
       }
-    })();
+    }
   }
 
   async getTasks() {
@@ -44,7 +46,7 @@ class TaskManager {
             resolve(JSON.parse(data));
           } catch (err) {
             // Si ocurre un error al parsear (ej. JSON mal formado), rechazamos la promesa
-            reject(new Error("Error al parsear JSON: " + err.message));
+            reject(new Error("Error al parsear JSON", { cause: err }));
           }
         });
 
@@ -53,40 +55,37 @@ class TaskManager {
           // Cerramos también el file handle por seguridad
           await fileHandle.close();
           // Rechazamos la promesa con el error de lectura
-          reject(new Error("Error de lectura: " + err.message));
+          reject(new Error("Error de lectura", { cause: err }));
         });
       });
     } catch (err) {
-      console.error(err);
+      throw new Error("Error al obtener las tareas", { cause: err });
     }
   }
 
   async addTask(description) {
     try {
+      if (!description || !description.trim()) {
+        throw new Error("Error, se debe agregar una descripción a la tarea");
+      }
+
       // Obtener la lista actual de tareas desde el archivo JSON
       const tasks = await this.getTasks();
-
       // Determinar el ID para la nueva tarea
-      let newId;
-      if (!tasks.length) {
-        // Si no hay tareas, asigna el ID 1
-        newId = 1;
-      } else {
-        // Si hay tareas, toma el último ID y le suma 1
-        newId = tasks[tasks.length - 1].id + 1;
-      }
+      const newId = !tasks.length ? 1 : tasks[tasks.length - 1].id + 1;
+      const now = new Date().toISOString();
 
       // Crear un nuevo objeto de tarea con los campos requeridos
       tasks.push({
         id: newId,
         description,
         status: "todo",
-        createdAt: new Date().toDateString(),
-        updatedAt: new Date().toDateString(),
+        createdAt: now,
+        updatedAt: now,
       });
 
-      let fileHandle = await fs.open("tasks.json", "w");
-      let stream = fileHandle.createWriteStream();
+      const fileHandle = await fs.open("tasks.json", "w");
+      const stream = fileHandle.createWriteStream();
 
       // Escribir la lista de tareas actualizada en el archivo
       stream.end(JSON.stringify(tasks));
@@ -97,7 +96,7 @@ class TaskManager {
         await fileHandle.close();
       });
     } catch (err) {
-      console.error(err);
+      throw new Error("Error al agregar una nueva tarea", { cause: err });
     }
   }
 }
