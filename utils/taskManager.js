@@ -107,7 +107,7 @@ class TaskManager {
       const taskExist = tasks.some((task) => task.id === id);
 
       if (!id || !taskExist) {
-        throw new Error("ID inválido o inexistente");
+        throw new Error("El id es inválido o inexistente");
       }
 
       // Obtener sólo las tareas que no son iguales al id
@@ -136,7 +136,7 @@ class TaskManager {
       const taskExist = tasks.some((task) => task.id === id);
 
       if (!id || !taskExist) {
-        throw new Error("ID inválido o inexistente");
+        throw new Error("El id es inválido o inexistente");
       }
       if (!description || !description.trim()) {
         throw new Error("Se debe agregar una descripción a la tarea");
@@ -166,6 +166,41 @@ class TaskManager {
       });
     } catch (err) {
       throw new Error("Error al actualizar una tarea", { cause: err });
+    }
+  }
+
+  async markTask(markType, id) {
+    try {
+      const tasks = await this.getTasks();
+      // Verificar si la tarea existe por su id
+      const taskExist = tasks.some((task) => task.id === id);
+
+      if (!id || !taskExist) {
+        throw new Error("El id es inválido o inexistente");
+      }
+
+      const newStatus =
+        markType === "mark-in-progress" ? "in-progress" : "done";
+
+      for (let task of tasks) {
+        if (task.id === id) {
+          task.status = newStatus;
+        }
+      }
+
+      const fileHandle = await fs.open("tasks.json", "w");
+      const stream = fileHandle.createWriteStream();
+
+      // Escribir la lista de tareas actualizada en el archivo
+      stream.end(JSON.stringify(tasks));
+      // Escuchar el evento 'finish', que se emite cuando toda la escritura ha terminado
+      stream.on("finish", async () => {
+        // Cerramos el file handle para liberar el recurso
+        await fileHandle.close();
+        console.log(`La tarea ${id} ha cambiado su estado a '${newStatus}'`);
+      });
+    } catch (err) {
+      throw new Error("Error al marcar una tarea", { cause: err });
     }
   }
 }
