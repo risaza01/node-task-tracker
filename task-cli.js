@@ -13,6 +13,10 @@ const args = process.argv.slice(2);
     } else if (args[0] === "delete") {
       const id = Number(args[1]);
       await tm.deleteTask(id);
+    } else if (args[0] === "update") {
+      const id = Number(args[1]);
+      const description = args[2];
+      await tm.updateTask(id, description);
     }
   } catch (err) {
     throw new Error("Error al ejecutar la aplicación", { cause: err });

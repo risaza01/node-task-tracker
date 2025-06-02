@@ -66,12 +66,12 @@ class TaskManager {
   async addTask(description) {
     try {
       if (!description || !description.trim()) {
-        throw new Error("Error, se debe agregar una descripción a la tarea");
+        throw new Error("Se debe agregar una descripción a la tarea");
       }
 
       // Obtener la lista actual de tareas desde el archivo JSON
       const tasks = await this.getTasks();
-      // Determinar el ID para la nueva tarea
+      // Determinar el id para la nueva tarea
       const newId = !tasks.length ? 1 : tasks[tasks.length - 1].id + 1;
       const now = new Date().toISOString();
 
@@ -89,7 +89,6 @@ class TaskManager {
 
       // Escribir la lista de tareas actualizada en el archivo
       stream.end(JSON.stringify(tasks));
-
       // Escuchar el evento 'finish', que se emite cuando toda la escritura ha terminado
       stream.on("finish", async () => {
         // Cerramos el file handle para liberar el recurso
@@ -104,12 +103,14 @@ class TaskManager {
   async deleteTask(id) {
     try {
       let tasks = await this.getTasks();
+      // Verificar si la tarea existe por su id
       const taskExist = tasks.some((task) => task.id === id);
 
       if (!id || !taskExist) {
         throw new Error("ID inválido o inexistente");
       }
 
+      // Obtener sólo las tareas que no son iguales al id
       tasks = tasks.filter((task) => task.id !== id);
 
       const fileHandle = await fs.open("tasks.json", "w");
@@ -117,7 +118,6 @@ class TaskManager {
 
       // Escribir la lista de tareas actualizada en el archivo
       stream.end(JSON.stringify(tasks));
-
       // Escuchar el evento 'finish', que se emite cuando toda la escritura ha terminado
       stream.on("finish", async () => {
         // Cerramos el file handle para liberar el recurso
@@ -126,6 +126,46 @@ class TaskManager {
       });
     } catch (err) {
       throw new Error("Error al eliminar la tarea", { cause: err });
+    }
+  }
+
+  async updateTask(id, description) {
+    try {
+      const tasks = await this.getTasks();
+      // Verificar si la tarea existe por su id
+      const taskExist = tasks.some((task) => task.id === id);
+
+      if (!id || !taskExist) {
+        throw new Error("ID inválido o inexistente");
+      }
+      if (!description || !description.trim()) {
+        throw new Error("Se debe agregar una descripción a la tarea");
+      }
+
+      // Obtener la fecha actual para modificar la fecha de actualización
+      const now = new Date().toISOString();
+
+      for (let task of tasks) {
+        if (task.id === id) {
+          // Modificar las propiedades de la tarea correspondiente
+          task.description = description;
+          task.updatedAt = now;
+        }
+      }
+
+      const fileHandle = await fs.open("tasks.json", "w");
+      const stream = fileHandle.createWriteStream();
+
+      // Escribir la lista de tareas actualizada en el archivo
+      stream.end(JSON.stringify(tasks));
+      // Escuchar el evento 'finish', que se emite cuando toda la escritura ha terminado
+      stream.on("finish", async () => {
+        // Cerramos el file handle para liberar el recurso
+        await fileHandle.close();
+        console.log(`La tarea ${id} se ha actualizado correctamente`);
+      });
+    } catch (err) {
+      throw new Error("Error al actualizar una tarea", { cause: err });
     }
   }
 }
