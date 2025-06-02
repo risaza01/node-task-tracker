@@ -94,9 +94,38 @@ class TaskManager {
       stream.on("finish", async () => {
         // Cerramos el file handle para liberar el recurso
         await fileHandle.close();
+        console.log("Tarea creada correctamente");
       });
     } catch (err) {
       throw new Error("Error al agregar una nueva tarea", { cause: err });
+    }
+  }
+
+  async deleteTask(id) {
+    try {
+      let tasks = await this.getTasks();
+      const taskExist = tasks.some((task) => task.id === id);
+
+      if (!id || !taskExist) {
+        throw new Error("ID inválido o inexistente");
+      }
+
+      tasks = tasks.filter((task) => task.id !== id);
+
+      const fileHandle = await fs.open("tasks.json", "w");
+      const stream = fileHandle.createWriteStream();
+
+      // Escribir la lista de tareas actualizada en el archivo
+      stream.end(JSON.stringify(tasks));
+
+      // Escuchar el evento 'finish', que se emite cuando toda la escritura ha terminado
+      stream.on("finish", async () => {
+        // Cerramos el file handle para liberar el recurso
+        await fileHandle.close();
+        console.log(`Tarea ${id} eliminada correctamente`);
+      });
+    } catch (err) {
+      throw new Error("Error al eliminar la tarea", { cause: err });
     }
   }
 }
