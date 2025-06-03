@@ -1,7 +1,20 @@
 const fs = require("fs/promises");
 
 class TaskManager {
-  constructor() {}
+  constructor() {
+    // Obtener la zona horaria del entorno donde se ejecuta el programa
+    this.userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // Obtener la fecha y hora en formato 'en-CA'
+    this.now = new Date().toLocaleString("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: this.userTimeZone,
+    });
+  }
 
   async init() {
     try {
@@ -73,15 +86,14 @@ class TaskManager {
       const tasks = await this.getTasks();
       // Determinar el id para la nueva tarea
       const newId = !tasks.length ? 1 : tasks[tasks.length - 1].id + 1;
-      const now = new Date().toISOString();
 
       // Crear un nuevo objeto de tarea con los campos requeridos
       tasks.push({
         id: newId,
         description,
         status: "todo",
-        createdAt: now,
-        updatedAt: now,
+        createdAt: this.now,
+        updatedAt: this.now,
       });
 
       const fileHandle = await fs.open("tasks.json", "w");
@@ -142,14 +154,11 @@ class TaskManager {
         throw new Error("Se debe agregar una descripción a la tarea");
       }
 
-      // Obtener la fecha actual para modificar la fecha de actualización
-      const now = new Date().toISOString();
-
       for (let task of tasks) {
         if (task.id === id) {
           // Modificar las propiedades de la tarea correspondiente
           task.description = description;
-          task.updatedAt = now;
+          task.updatedAt = this.now;
         }
       }
 
