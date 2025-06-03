@@ -203,6 +203,40 @@ class TaskManager {
       throw new Error("Error al marcar una tarea", { cause: err });
     }
   }
+
+  async listTasks(listType) {
+    try {
+      // Validar que el tipo de lista insertado sea válido
+      if (!["total", "todo", "in-progress", "done"].includes(listType)) {
+        throw new Error("El tipo de lista es inválido");
+      }
+
+      let tasks = await this.getTasks();
+
+      // Si el tipo de lista es diferente a 'total', debe filtrar las tareas según el estatus
+      if (listType !== "total") {
+        tasks = tasks.filter((task) => task.status === listType);
+      }
+
+      if (!tasks.length) {
+        // Imprimir un mensaje informando si la lista de tareas está vacía
+        console.log(`No hay tareas en la categoría "${listType}"`);
+      } else {
+        // Si no está vacía, debe imprimir una tabla con las tareas
+        // Se hace un mapeo antes para que los campos aparezcan en español
+        const tableData = tasks.map((task) => ({
+          ID: task.id,
+          Descripción: task.description,
+          Estado: task.status,
+          "Creado el": task.createdAt,
+          "Actualizado el": task.updatedAt,
+        }));
+        console.table(tableData);
+      }
+    } catch (err) {
+      throw new Error("Error al listar las tareas", { cause: err });
+    }
+  }
 }
 
 module.exports = TaskManager;
