@@ -1,4 +1,5 @@
 const fs = require("fs/promises");
+const path = require("path");
 
 class TaskManager {
   constructor() {
@@ -14,17 +15,19 @@ class TaskManager {
       hour12: false,
       timeZone: this.userTimeZone,
     });
+    // Obtener la ruta absoluta del archivo tasks.json
+    this.filePath = path.join(__dirname, "../tasks.json");
   }
 
   async init() {
     try {
       // Verificar si el archivo tasks.json existe
-      await fs.access("tasks.json");
+      await fs.access(this.filePath);
     } catch (err) {
       // Si no existe el archivo tasks.json, lo creamos
       if (err.code === "ENOENT") {
         try {
-          await fs.writeFile("tasks.json", "[]");
+          await fs.writeFile(this.filePath, "[]");
         } catch (writeErr) {
           throw new Error("Error al crear el archivo tasks.json", {
             cause: writeErr,
@@ -38,7 +41,7 @@ class TaskManager {
 
   async getTasks() {
     try {
-      let fileHandle = await fs.open("tasks.json", "r");
+      let fileHandle = await fs.open(this.filePath, "r");
       let stream = fileHandle.createReadStream();
       // Aquí se acumularán los datos leídos en formato texto
       let data = "";
@@ -96,7 +99,7 @@ class TaskManager {
         updatedAt: this.now,
       });
 
-      const fileHandle = await fs.open("tasks.json", "w");
+      const fileHandle = await fs.open(this.filePath, "w");
       const stream = fileHandle.createWriteStream();
 
       // Escribir la lista de tareas actualizada en el archivo
@@ -125,7 +128,7 @@ class TaskManager {
       // Obtener sólo las tareas que no son iguales al id
       tasks = tasks.filter((task) => task.id !== id);
 
-      const fileHandle = await fs.open("tasks.json", "w");
+      const fileHandle = await fs.open(this.filePath, "w");
       const stream = fileHandle.createWriteStream();
 
       // Escribir la lista de tareas actualizada en el archivo
@@ -162,7 +165,7 @@ class TaskManager {
         }
       }
 
-      const fileHandle = await fs.open("tasks.json", "w");
+      const fileHandle = await fs.open(this.filePath, "w");
       const stream = fileHandle.createWriteStream();
 
       // Escribir la lista de tareas actualizada en el archivo
@@ -197,7 +200,7 @@ class TaskManager {
         }
       }
 
-      const fileHandle = await fs.open("tasks.json", "w");
+      const fileHandle = await fs.open(this.filePath, "w");
       const stream = fileHandle.createWriteStream();
 
       // Escribir la lista de tareas actualizada en el archivo
