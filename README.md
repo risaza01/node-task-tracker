@@ -45,13 +45,13 @@ node task-cli.js add "Comprar frutas"
 ### Modificar una tarea
 
 ```bash
-node index.js update 1 "Comprar frutas y verduras"
+node task-cli.js update 1 "Comprar frutas y verduras"
 ```
 
 ### Eliminar una tarea
 
 ```bash
-node index.js delete 1
+node task-cli.js delete 1
 ```
 
 ### Listar tareas
@@ -77,13 +77,15 @@ node task-cli.js mark-done 1
 Las tareas se almacenan como objetos JSON dentro del archivo `tasks.json`:
 
 ```json
-{
-  "id": 1,
-  "description": "Comprar frutas",
-  "status": "todo",
-  "createdAt": "2025-06-03, 14:00",
-  "updatedAt": "2025-06-03, 14:00"
-}
+[
+  {
+    "id": 1,
+    "description": "Comprar frutas",
+    "status": "todo",
+    "createdAt": "2025-06-03, 14:00",
+    "updatedAt": "2025-06-03, 14:00"
+  }
+]
 ```
 
 ---
