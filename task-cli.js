@@ -5,6 +5,7 @@ const args = process.argv.slice(2);
 
 (async () => {
   try {
+    // Verifica si el documento existe. Si no existe, lo crea
     await tm.init();
 
     if (args[0] === "add") {

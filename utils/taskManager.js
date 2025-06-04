@@ -235,15 +235,7 @@ class TaskManager {
         console.log(`No hay tareas en la categoría "${listType}"`);
       } else {
         // Si no está vacía, debe imprimir una tabla con las tareas
-        // Se hace un mapeo antes para que los campos aparezcan en español
-        const tableData = tasks.map((task) => ({
-          ID: task.id,
-          Descripción: task.description,
-          Estado: task.status,
-          "Creado el": task.createdAt,
-          "Actualizado el": task.updatedAt,
-        }));
-        console.table(tableData);
+        console.table(tasks);
       }
     } catch (err) {
       throw new Error("Error al listar las tareas", { cause: err });
