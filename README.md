@@ -18,19 +18,42 @@ Es una aplicación que monitorea y gestiona tareas. A través de una interfaz de
 
 ## ⚙️ Instalación
 
+### Opción 1: Usar localmente con Node.js
+
 1. Clona este repositorio:
 
-```bash
-git clone https://github.com/risaza01/node-task-tracker.git
-```
+   ```bash
+   git clone https://github.com/risaza01/node-task-tracker.git
+   cd node-task-tracker
+   ```
 
-2. Asegúrate de tener [Node.js](https://nodejs.org) instalado (v14 o superior).
+2. Asegúrate de tener Node.js instalado (v14 o superior).
+3. Ejecuta la aplicación con Node.js:
 
-3. Ejecuta la aplicación usando Node.js:
+   ```bash
+   node task-cli.js [comando] [argumentos]
+   ```
 
-```bash
-node task-cli.js [comando] [argumentos]
-```
+### Opción 2: Instalar el CLI globalmente para usar el comando task-cli
+
+1. Clona este repositorio y entra en la carpeta:
+
+   ```bash
+   git clone https://github.com/risaza01/node-task-tracker.git
+   cd node-task-tracker
+   ```
+
+2. Enlaza el CLI globalmente con:
+
+   ```bash
+   npm link
+   ```
+
+3. Ahora puedes ejecutar el comando task-cli desde cualquier carpeta en tu sistema:
+
+   ```bash
+   task-cli add "Fregar los platos"
+   ```
 
 ---
 

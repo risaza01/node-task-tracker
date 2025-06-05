@@ -1,0 +1,23 @@
+{
+  "name": "task-tracker",
+  "version": "1.0.0",
+  "description": "Aplicación que monitorea y gestiona tareas",
+  "main": "task-cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/risaza01/node-task-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/risaza01/node-task-tracker/issues"
+  },
+  "homepage": "https://github.com/risaza01/node-task-tracker#readme",
+  "bin": {
+    "task-cli": "./task-cli.js"
+  }
+}

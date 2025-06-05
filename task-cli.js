@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const TaskManager = require("./utils/taskManager");
 
 const tm = new TaskManager();
