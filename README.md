@@ -18,42 +18,24 @@ Es una aplicación que monitorea y gestiona tareas. A través de una interfaz de
 
 ## ⚙️ Instalación
 
-### Opción 1: Usar localmente con Node.js
-
 1. Clona este repositorio:
 
-   ```bash
-   git clone https://github.com/risaza01/node-task-tracker.git
-   cd node-task-tracker
-   ```
+```bash
+git clone https://github.com/risaza01/node-task-tracker.git
+cd node-task-tracker
+```
 
-2. Asegúrate de tener Node.js instalado (v14 o superior).
-3. Ejecuta la aplicación con Node.js:
+2. Asegúrate de tener [Node.js](https://nodejs.org) instalado (v14 o superior).
 
-   ```bash
-   node task-cli.js [comando] [argumentos]
-   ```
+3. Instala el comando globalmente:
 
-### Opción 2: Instalar el CLI globalmente para usar el comando task-cli
+```bash
+npm install -g .
+```
 
-1. Clona este repositorio y entra en la carpeta:
+> Esto te permitirá usar `task-cli` como comando desde cualquier parte del sistema.
 
-   ```bash
-   git clone https://github.com/risaza01/node-task-tracker.git
-   cd node-task-tracker
-   ```
-
-2. Enlaza el CLI globalmente con:
-
-   ```bash
-   npm link
-   ```
-
-3. Ahora puedes ejecutar el comando task-cli desde cualquier carpeta en tu sistema:
-
-   ```bash
-   task-cli add "Fregar los platos"
-   ```
+4. Verifica que funcione
 
 ---
 
@@ -62,35 +44,35 @@ Es una aplicación que monitorea y gestiona tareas. A través de una interfaz de
 ### Agregar una tarea nueva
 
 ```bash
-node task-cli.js add "Comprar frutas"
+task-cli add "Comprar frutas"
 ```
 
 ### Modificar una tarea
 
 ```bash
-node task-cli.js update 1 "Comprar frutas y verduras"
+task-cli update 1 "Comprar frutas y verduras"
 ```
 
 ### Eliminar una tarea
 
 ```bash
-node task-cli.js delete 1
+task-cli delete 1
 ```
 
 ### Listar tareas
 
 ```bash
-node task-cli.js list               # Tareas totales
-node task-cli.js list todo          # Solo tareas pendientes
-node task-cli.js list in-progress   # Solo tareas en progreso
-node task-cli.js list done          # Solo tareas terminadas
+task-cli list               # Tareas totales
+task-cli list todo          # Solo tareas pendientes
+task-cli list in-progress   # Solo tareas en progreso
+task-cli list done          # Solo tareas terminadas
 ```
 
 ### Cambiar estado de una tarea
 
 ```bash
-node task-cli.js mark-in-progress 1
-node task-cli.js mark-done 1
+task-cli mark-in-progress 1
+task-cli mark-done 1
 ```
 
 ---
