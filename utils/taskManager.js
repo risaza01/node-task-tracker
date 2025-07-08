@@ -29,12 +29,10 @@ class TaskManager {
         try {
           await fs.writeFile(this.filePath, "[]");
         } catch (writeErr) {
-          throw new Error("Error al crear el archivo tasks.json", {
-            cause: writeErr,
-          });
+          throw new Error(writeErr.message);
         }
       } else {
-        throw new Error("Error al inicializar el archivo", { cause: err });
+        throw new Error(err.message);
       }
     }
   }
@@ -62,7 +60,7 @@ class TaskManager {
             resolve(JSON.parse(data));
           } catch (err) {
             // Si ocurre un error al parsear (ej. JSON mal formado), rechazamos la promesa
-            reject(new Error("Error al parsear JSON", { cause: err }));
+            reject(new Error(err.message));
           }
         });
 
@@ -71,11 +69,11 @@ class TaskManager {
           // Cerramos también el file handle por seguridad
           await fileHandle.close();
           // Rechazamos la promesa con el error de lectura
-          reject(new Error("Error de lectura", { cause: err }));
+          reject(new Error(err.message));
         });
       });
     } catch (err) {
-      throw new Error("Error al obtener las tareas", { cause: err });
+      throw new Error(err.message);
     }
   }
 
@@ -111,7 +109,7 @@ class TaskManager {
         console.log("Tarea creada correctamente");
       });
     } catch (err) {
-      throw new Error("Error al agregar una nueva tarea", { cause: err });
+      throw new Error(err.message);
     }
   }
 
@@ -140,7 +138,7 @@ class TaskManager {
         console.log(`Tarea ${id} eliminada correctamente`);
       });
     } catch (err) {
-      throw new Error("Error al eliminar la tarea", { cause: err });
+      throw new Error(err.message);
     }
   }
 
@@ -177,7 +175,7 @@ class TaskManager {
         console.log(`La tarea ${id} se ha actualizado correctamente`);
       });
     } catch (err) {
-      throw new Error("Error al actualizar una tarea", { cause: err });
+      throw new Error(err.message);
     }
   }
 
@@ -212,7 +210,7 @@ class TaskManager {
         console.log(`La tarea ${id} ha cambiado su estado a '${newStatus}'`);
       });
     } catch (err) {
-      throw new Error("Error al marcar una tarea", { cause: err });
+      throw new Error(err.message);
     }
   }
 
@@ -238,7 +236,7 @@ class TaskManager {
         console.table(tasks);
       }
     } catch (err) {
-      throw new Error("Error al listar las tareas", { cause: err });
+      throw new Error(err.message);
     }
   }
 }

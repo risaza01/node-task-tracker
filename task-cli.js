@@ -27,8 +27,10 @@ const args = process.argv.slice(2);
     } else if (args[0] === "list") {
       const listType = args[1] === undefined ? "total" : args[1];
       await tm.listTasks(listType);
+    } else {
+      throw new Error(`El comando '${args[0]}' no existe`);
     }
   } catch (err) {
-    throw new Error("Error al ejecutar la aplicación", { cause: err });
+    console.error("error:", err.message);
   }
 })();
