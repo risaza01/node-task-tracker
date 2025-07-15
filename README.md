@@ -1,4 +1,4 @@
-# 📊 Rastreador de Tareas CLI
+# 📊 Task Tracker CLI
 
 Es una aplicación que monitorea y gestiona tareas. A través de una interfaz de línea de comandos (CLI) sencilla, monitoriza lo que se necesita hacer, lo que se ha terminado y en lo que se está trabajando actualmente.
 
